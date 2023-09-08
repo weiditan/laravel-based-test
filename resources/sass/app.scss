@@ -1,0 +1,28 @@
+@import "~bootstrap/scss/bootstrap";
+
+$mdi-font-path: "~@mdi/font/fonts";
+@import "~@mdi/font/scss/materialdesignicons";
+
+$top-header-height: 60px;
+
+$side-menu: 300px;
+$side-content-width: calc(100vw - $side-menu);
+
+.top-header {
+    position: fixed;
+    width: $side-content-width;
+    height: $top-header-height;
+    z-index: 50;
+}
+
+.top-header-margin {
+    margin-top: $top-header-height;
+}
+
+.side-menu {
+    width: $side-menu;
+}
+
+.side-content {
+    width: $side-content-width;
+}
