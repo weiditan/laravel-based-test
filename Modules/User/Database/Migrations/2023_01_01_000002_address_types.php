@@ -5,27 +5,30 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+    const table = "address_types";
+
     /**
      * Run the migrations.
+     *
+     * @return void
      */
     public function up(): void
     {
-        Schema::create("failed_jobs", function (Blueprint $table) {
+        Schema::create(self::table, function (Blueprint $table) {
             $table->id();
-            $table->string("uuid")->unique();
-            $table->text("connection");
-            $table->text("queue");
-            $table->longText("payload");
-            $table->longText("exception");
-            $table->timestamp("failed_at")->useCurrent();
+            $table->string("name")->unique();
+            $table->boolean("is_active");
+            $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
     public function down(): void
     {
-        Schema::dropIfExists("failed_jobs");
+        Schema::dropIfExists(self::table);
     }
 };
