@@ -56,6 +56,7 @@
                 <tr>
                     <th>#</th>
                     <th colspan="2">Details</th>
+                    <th>Created At</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -98,6 +99,7 @@
                                 @endforelse
                             </div>
                         </td>
+                        <td style="min-width: 230px;">{{ date_format(date_create($user->created_at),"d M Y h:i A") }}</td>
                     </tr>
                 @empty
                     <tr>
