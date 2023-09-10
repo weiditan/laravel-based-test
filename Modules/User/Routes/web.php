@@ -18,6 +18,7 @@ Route::prefix("user")
     ->name("user.")
     ->group(function () {
         Route::get("/", [UserController::class, "user_listing"])->name("listing");
+        Route::get("/export", [UserController::class, "user_export"])->name("export");
 
         Route::get("/add", [UserController::class, "user_form"])->name("add");
         Route::get("/edit/{user_id}", [UserController::class, "user_form"])->name("edit");

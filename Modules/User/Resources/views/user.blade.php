@@ -67,18 +67,20 @@
             <div class="col-12 col-xl-8">
                 <div class="d-flex flex-column gap-4">
                     @forelse($user->address_list->sortBy('address_type_id') as $address)
-                        <div>
-                            <h5 class="mb-1">{{ $address->address_type->name }}</h5>
-                            <p>{{ "$address->address," }}</p>
-                            <p>{{ "$address->zipcode $address->city," }}</p>
-                            <p>{{ "$address->state, $address->country." }}</p>
-                            @if($proof_document = $address->getFirstDocument("proof_document"))
-                                <a href="{{ $proof_document->url }}" target="_blank">
-                                    <span class="mdi mdi-file mdi-18px"></span>
-                                    {{ $proof_document->file_name }}
-                                </a>
-                            @endif
-                        </div>
+                        @if($address->address_type->is_active)
+                            <div>
+                                <h5 class="mb-1">{{ $address->address_type->name }}</h5>
+                                <p>{{ "$address->address," }}</p>
+                                <p>{{ "$address->zipcode $address->city," }}</p>
+                                <p>{{ "$address->state, $address->country." }}</p>
+                                @if($proof_document = $address->getFirstDocument("proof_document"))
+                                    <a href="{{ $proof_document->url }}" target="_blank">
+                                        <span class="mdi mdi-file mdi-18px"></span>
+                                        {{ $proof_document->file_name }}
+                                    </a>
+                                @endif
+                            </div>
+                        @endif
                     @empty
                     @endforelse
                 </div>

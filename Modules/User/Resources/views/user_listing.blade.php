@@ -6,7 +6,7 @@
 
 @section('content')
     <section class="section">
-        <form>
+        <form id="form">
             <div class="row">
                 <div class="col-12 col-lg-6 col-xl-4">
                     <label for="keyword" class="form-label">Free Text</label>
@@ -15,11 +15,39 @@
                 </div>
             </div>
 
-            <div class="mt-4">
-                <button type="submit" class="btn btn-primary">Search</button>
-                <button onclick="event.preventDefault(); window.location='{{ route("user.listing") }}'" class="btn btn-outline-secondary">Reset</button>
+            <div class="mt-4 d-flex gap-2">
+                <button class="btn btn-primary" onclick="submitForm('{{ route("user.listing") }}')">Search</button>
+                <div class="dropdown">
+                    <a class="btn btn-success dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Export
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><a class="dropdown-item" href="javascript:void(0);"
+                               onclick="redirectUrl('{{ route("user.export") }}')">All</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0);"
+                               onclick="submitForm('{{ route("user.export") }}')">Filter</a></li>
+                    </ul>
+                </div>
+                <button class="btn btn-outline-secondary" onclick="redirectUrl('{{ route("user.listing") }}')">
+                    Reset
+                </button>
             </div>
         </form>
+        <script>
+            function submitForm(url) {
+                event.preventDefault();
+
+                const form = document.getElementById("form");
+                form.action = url;
+                form.submit();
+            }
+
+            function redirectUrl(url) {
+                event.preventDefault();
+                window.location = url;
+            }
+        </script>
     </section>
 
     <section class="section">
@@ -67,12 +95,14 @@
                         <td style="min-width: 300px;">
                             <div class="d-flex flex-column gap-4">
                                 @forelse($user->address_list->sortBy('address_type_id') as $address)
-                                    <div>
-                                        <h6>{{ $address->address_type->name }}</h6>
-                                        <p>{{ "$address->address," }}</p>
-                                        <p>{{ "$address->zipcode $address->city," }}</p>
-                                        <p>{{ "$address->state, $address->country." }}</p>
-                                    </div>
+                                    @if($address->address_type->is_active)
+                                        <div>
+                                            <h6>{{ $address->address_type->name }}</h6>
+                                            <p>{{ "$address->address," }}</p>
+                                            <p>{{ "$address->zipcode $address->city," }}</p>
+                                            <p>{{ "$address->state, $address->country." }}</p>
+                                        </div>
+                                    @endif
                                 @empty
                                 @endforelse
                             </div>

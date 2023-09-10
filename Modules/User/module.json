@@ -4,6 +4,9 @@
     "description": "",
     "keywords": [],
     "priority": 0,
-    "providers": ["Modules\\User\\Providers\\UserServiceProvider"],
+    "providers": [
+        "Modules\\User\\Providers\\UserServiceProvider",
+        "Modules\\User\\Providers\\RepositoryServiceProvider"
+    ],
     "files": []
 }

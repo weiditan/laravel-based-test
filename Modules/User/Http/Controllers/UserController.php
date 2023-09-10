@@ -3,35 +3,43 @@
 namespace Modules\User\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\User\Entities\Address;
 use Modules\User\Entities\AddressType;
 use Modules\User\Entities\User;
+use Modules\User\Exports\UsersExport;
 use Modules\User\Http\Requests\UserDeleteRequest;
 use Modules\User\Http\Requests\UserRequest;
+use Modules\User\Interfaces\UserRepositoryInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class UserController extends Controller
 {
+    private UserRepositoryInterface $user_repository;
+
+    public function __construct(UserRepositoryInterface $user_repository)
+    {
+        $this->user_repository = $user_repository;
+    }
+
     public function user_listing(Request $request): View
     {
-        $user_list = User::query()
-            ->with(["document_list", "address_list.address_type"])
-            ->when($request->filled("keyword"), function (Builder $query_keyword) use ($request) {
-                $query_keyword
-                    ->where("email", "=", $request->input("keyword"))
-                    ->orWhere("first_name", "like", "%" . $request->input("keyword") . "%")
-                    ->orWhere("last_name", "like", "%" . $request->input("keyword") . "%");
-            })
-            ->orderBy("created_at")
-            ->paginate(10);
+        $user_list = $this->user_repository->user_builder($request->all())->paginate(10);
 
         return view("user::user_listing", [
             "user_list" => $user_list,
         ]);
+    }
+
+    public function user_export(Request $request): BinaryFileResponse
+    {
+        $user_list = $this->user_repository->user_builder($request->all())->get();
+
+        return Excel::download(new UsersExport($user_list), "users.xlsx");
     }
 
     public function user_detail($user_id): View
@@ -97,28 +105,30 @@ class UserController extends Controller
             ]);
         }
 
-        foreach ($request->validated("address_list") as $address_input) {
-            $address = Address::query()->updateOrCreate(
-                [
-                    "user_id" => $user->id,
-                    "address_type_id" => $address_input["address_type_id"],
-                ],
-                [
-                    "address" => $address_input["address"],
-                    "zipcode" => $address_input["zipcode"],
-                    "city" => $address_input["city"],
-                    "state" => $address_input["state"],
-                    "country" => $address_input["country"],
-                ],
-            );
-
-            if (!empty($address_input["proof_document"])) {
-                $address->addDocument($address_input["proof_document"], "proof_document", true);
-            }
-        }
-
         if ($request->hasFile("profile_image")) {
             $user->addDocument($request->file("profile_image"), "profile_image", true);
+        }
+
+        if (!empty($request->validated("address_list"))) {
+            foreach ($request->validated("address_list") as $address_input) {
+                $address = Address::query()->updateOrCreate(
+                    [
+                        "user_id" => $user->id,
+                        "address_type_id" => $address_input["address_type_id"],
+                    ],
+                    [
+                        "address" => $address_input["address"],
+                        "zipcode" => $address_input["zipcode"],
+                        "city" => $address_input["city"],
+                        "state" => $address_input["state"],
+                        "country" => $address_input["country"],
+                    ],
+                );
+
+                if (!empty($address_input["proof_document"])) {
+                    $address->addDocument($address_input["proof_document"], "proof_document", true);
+                }
+            }
         }
 
         return redirect(route("user.detail", ["user_id" => $user->id]))->with([
