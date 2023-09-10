@@ -22,7 +22,16 @@ class UsersExport implements FromArray
             ->pluck("name", "id")
             ->toArray();
 
-        $header = ["Id", "Email", "First Name", "Last Name", "Birthdate", "Created At", ...$address_type_array];
+        $header = [
+            "Id",
+            "Email",
+            "First Name",
+            "Last Name",
+            "Birthdate",
+            "Created At",
+            "Status",
+            ...$address_type_array,
+        ];
         $data = $this->data
             ->map(function ($user) use ($address_type_array) {
                 $address_array = [];
@@ -42,6 +51,7 @@ class UsersExport implements FromArray
                     $user->last_name,
                     $user->birthdate,
                     $user->created_at,
+                    $user->status,
                     ...$address_array,
                 ];
             })
