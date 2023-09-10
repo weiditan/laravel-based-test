@@ -41,18 +41,24 @@
                     <input type="text" class="form-control" id="birthdate" name="birthdate"
                            value="{{ old("birthdate", $user?->birthdate) }}">
                 </div>
-                <div class="col-12 col-xl-6">
-                    <label for="profile_image" class="form-label">Profile Image</label>
-                    <div class="mb-2">
-                        @if($profile_image = $user?->getFirstDocument("profile_image"))
-                            <a href="{{ $profile_image->url }}" target="_blank">
-                                <img class="profile-image"
-                                     src="{{ $profile_image->url }}"
-                                     alt="{{ $profile_image->file_name }}"/>
-                            </a>
-                        @endif
+                <div class="col-12 col-lg-6 col-xl-4">
+                    <label for="status" class="form-label">Status</label>
+                    {!! Form::select('status', $user_status_dropdown, old("status", $user?->status), ["class" => "form-control"]) !!}
+                </div>
+                <div class="row m-0 p-0">
+                    <div class="col-12 col-xl-6">
+                        <label for="profile_image" class="form-label">Profile Image</label>
+                        <div class="mb-2">
+                            @if($profile_image = $user?->getFirstDocument("profile_image"))
+                                <a href="{{ $profile_image->url }}" target="_blank">
+                                    <img class="profile-image"
+                                         src="{{ $profile_image->url }}"
+                                         alt="{{ $profile_image->file_name }}"/>
+                                </a>
+                            @endif
+                        </div>
+                        <input class="form-control" type="file" id="profile_image" name="profile_image">
                     </div>
-                    <input class="form-control" type="file" id="profile_image" name="profile_image">
                 </div>
             </div>
         </section>

@@ -32,6 +32,8 @@ class UserController extends Controller
 
         return view("user::user_listing", [
             "user_list" => $user_list,
+            "user_status_color_class_list" => User::$user_status_color_class_list,
+            "user_status_dropdown" => $this->user_repository->user_status_dropdown(true),
         ]);
     }
 
@@ -48,6 +50,7 @@ class UserController extends Controller
 
         return view("user::user", [
             "user" => $user,
+            "user_status_color_class_list" => User::$user_status_color_class_list,
         ]);
     }
 
@@ -71,6 +74,7 @@ class UserController extends Controller
             "action" => $action,
             "user" => $user,
             "address_type_list" => $address_type_list,
+            "user_status_dropdown" => $this->user_repository->user_status_dropdown(),
         ]);
     }
 
@@ -103,6 +107,10 @@ class UserController extends Controller
                 "last_name" => $request->validated("last_name"),
                 "birthdate" => $request->validated("birthdate"),
             ]);
+        }
+
+        if ($request->validated("status") != $user->status) {
+            $user->setStatus($request->validated("status"));
         }
 
         if ($request->hasFile("profile_image")) {

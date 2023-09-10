@@ -42,6 +42,8 @@ class UserFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (User $user) {
+            $user->setStatus(array_rand(User::$user_status_color_class_list));
+
             $address_type_list = AddressType::query()
                 ->where("is_active", "=", true)
                 ->get();

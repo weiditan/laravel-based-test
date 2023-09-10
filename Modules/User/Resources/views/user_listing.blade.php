@@ -13,6 +13,10 @@
                     <input type="text" class="form-control" id="keyword" name="keyword"
                            value="{{ request("keyword") }}">
                 </div>
+                <div class="col-12 col-lg-6 col-xl-4">
+                    <label for="status" class="form-label">Status</label>
+                    {!! Form::select('status', $user_status_dropdown, request("status"), ["class" => "form-control"]) !!}
+                </div>
             </div>
 
             <div class="mt-4 d-flex gap-2">
@@ -34,20 +38,6 @@
                 </button>
             </div>
         </form>
-        <script>
-            function submitForm(url) {
-                event.preventDefault();
-
-                const form = document.getElementById("form");
-                form.action = url;
-                form.submit();
-            }
-
-            function redirectUrl(url) {
-                event.preventDefault();
-                window.location = url;
-            }
-        </script>
     </section>
 
     <section class="section">
@@ -89,6 +79,7 @@
                                     <h6>{{ $user->full_name }}</h6>
                                     <p>{{ $user->email }}</p>
                                     <p>{{ date_format(date_create($user->birthdate),"d M Y") }}</p>
+                                    <h5 class="mt-3 {{ $user_status_color_class_list[$user->status] }}">{{ strtoupper($user->status) }}</h5>
                                 </div>
                             </div>
                         </td>
@@ -123,4 +114,18 @@
         @endif
     </section>
 
+    <script>
+        function submitForm(url) {
+            event.preventDefault();
+
+            const form = document.getElementById("form");
+            form.action = url;
+            form.submit();
+        }
+
+        function redirectUrl(url) {
+            event.preventDefault();
+            window.location = url;
+        }
+    </script>
 @endsection

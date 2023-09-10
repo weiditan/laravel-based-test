@@ -18,6 +18,7 @@ class UserRequest extends FormRequest
             "last_name" => ["required"],
             "birthdate" => ["required", "date_format:Y-m-d"],
             "profile_image" => ["nullable", "file", "mimes:jpeg,png"],
+            "status" => ["required"],
 
             "address_list" => ["nullable", "array"],
             "address_list.*.address_type_id" => ["required", "exists:address_types,id"],

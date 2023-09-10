@@ -60,6 +60,7 @@
                         <h5 class="mb-1">{{ $user->full_name }}</h5>
                         <p>{{ $user->email }}</p>
                         <p>{{ date_format(date_create($user->birthdate),"d M Y") }}</p>
+                        <h5 class="mt-3 {{ $user_status_color_class_list[$user->status] }}">{{ strtoupper($user->status) }}</h5>
                     </div>
                 </div>
             </div>

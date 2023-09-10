@@ -10,13 +10,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\User\Database\factories\UserFactory;
+use Spatie\ModelStatus\HasStatuses;
 
 class User extends Model
 {
-    use SoftDeletes, HasFactory, HasDocument;
+    use SoftDeletes, HasStatuses, HasFactory, HasDocument;
 
     protected $fillable = ["email", "password", "first_name", "last_name", "birthdate"];
     protected $hidden = ["password"];
+
+    public static array $user_status_color_class_list = [
+        "pending" => "text-warning",
+        "approved" => "text-success",
+        "rejected" => "text-danger",
+        "terminated" => "text-muted",
+    ];
 
     protected static function newFactory(): Factory
     {
