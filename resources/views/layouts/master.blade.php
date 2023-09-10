@@ -30,9 +30,24 @@
         </div>
     </div>
     <div class="side-content flex-grow-1 overflow-auto">
-        <header class="top-header top-header-box d-flex justify-content-end align-items-center px-4">
+        <header class="d-block d-md-none top-header top-header-box d-flex justify-content-between align-items-center px-4">
+            <div class="dropdown">
+                <a class="btn" href="javascript:void(0);" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                    <span class="mdi mdi-menu mdi-24px"></span>
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li>
+                        <a class="dropdown-item" href="{{ route("user.listing") }}">
+                            <span class="mdi mdi-account me-2"></span>
+                            User
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </header>
-        <div class="top-header-box"></div>
+        <div class="d-block d-md-none top-header-box"></div>
         <div class="p-4">
             <h3 class="mb-4">@yield('title')</h3>
             @if(Session::has('success_msg'))
