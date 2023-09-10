@@ -11,6 +11,12 @@
 |
 */
 
-Route::prefix("user")->group(function () {
-    Route::get("/", "UserController@index");
-});
+use Illuminate\Support\Facades\Route;
+use Modules\User\Http\Controllers\UserController;
+
+Route::prefix("user")
+    ->name("user.")
+    ->group(function () {
+        Route::get("/", [UserController::class, "user_listing"])->name("listing");
+        Route::get("/{user_id}", [UserController::class, "user_detail"])->name("detail");
+    });

@@ -3,44 +3,23 @@
 $mdi-font-path: "~@mdi/font/fonts";
 @import "~@mdi/font/scss/materialdesignicons";
 
-body {
-    background: #f3f3f3;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
 }
 
-$top-header-height: 60px;
-
-$side-menu: 300px;
-$side-content-width: calc(100% - $side-menu);
-
-.top-header {
-    position: fixed;
-    height: $top-header-height;
-    z-index: 50;
-    width: 100%;
-
-    @media (min-width: 768px) {
-        width: $side-content-width;
-    }
+.cursor-pointer {
+    cursor: pointer;
 }
 
-.top-header-margin {
-    margin-top: $top-header-height;
-}
-
-.side-menu {
-    width: $side-menu;
-    display: none;
-
-    @media (min-width: 768px) {
-        display: flex;
-        flex-direction: column;
-    }
-}
-
-.side-content {
-    width: 100%;
-
-    @media (min-width: 768px) {
-        width: $side-content-width;
-    }
+.section {
+    background: white;
+    padding: 24px;
+    margin-top: 24px;
+    margin-bottom: 24px;
 }

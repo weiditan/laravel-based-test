@@ -1,0 +1,52 @@
+body {
+    background: #f3f3f3;
+}
+
+$top-header-height: 60px;
+
+$side-menu: 300px;
+$side-content-width: calc(100% - $side-menu);
+
+.top-header {
+    position: fixed;
+    background: white;
+    box-shadow: 0 1px 15px 0 rgba(0, 0, 0, 0.15);
+    z-index: 50;
+    width: 100%;
+
+    @media (min-width: 768px) {
+        width: $side-content-width;
+    }
+}
+
+.top-header-box {
+    height: $top-header-height;
+}
+
+.side-menu {
+    width: $side-menu;
+    background: white;
+    box-shadow: 1px 0 15px 0 rgba(0, 0, 0, 0.15);
+    z-index: 60;
+    display: none;
+
+    @media (min-width: 768px) {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.side-content {
+    width: 100%;
+
+    @media (min-width: 768px) {
+        width: $side-content-width;
+    }
+}
+
+.profile-image-round-70 {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
