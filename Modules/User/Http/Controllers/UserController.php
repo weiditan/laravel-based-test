@@ -2,24 +2,23 @@
 
 namespace Modules\User\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Hash;
+use Modules\User\Entities\Address;
+use Modules\User\Entities\AddressType;
 use Modules\User\Entities\User;
+use Modules\User\Http\Requests\UserRequest;
 
 class UserController extends Controller
 {
-    public function user_listing(Request $request): View|RedirectResponse
+    public function user_listing(Request $request): View
     {
-        if ($request->input("submit") == "reset") {
-            return redirect(route("user.listing"));
-        }
-
         $user_list = User::query()
-            ->with(["address_list.address_type"])
+            ->with(["document_list", "address_list.address_type"])
             ->when($request->filled("keyword"), function (Builder $query_keyword) use ($request) {
                 $query_keyword
                     ->where("email", "=", $request->input("keyword"))
@@ -38,68 +37,91 @@ class UserController extends Controller
     {
         $user = User::query()->findOrFail($user_id);
 
-        return view("user::index", [
+        return view("user::user", [
             "user" => $user,
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
+    public function user_form($user_id = null): View
     {
-        return view("user::create");
+        $action = "create";
+        $user = null;
+
+        if ($user_id) {
+            $action = "update";
+            $user = User::query()->findOrFail($user_id);
+
+            $user->input_address_list = $user->address_list->keyBy("address_type_id");
+        }
+
+        $address_type_list = AddressType::query()
+            ->where("is_active", "=", true)
+            ->get();
+
+        return view("user::user_form", [
+            "action" => $action,
+            "user" => $user,
+            "address_type_list" => $address_type_list,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
+    public function user_update_or_create(UserRequest $request): RedirectResponse
     {
-        //
-    }
+        if ($request->validated("user_id")) {
+            $success_msg = "Successfully updated user.";
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view("user::show");
-    }
+            $user = User::query()->find($request->validated("user_id"));
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view("user::edit");
-    }
+            $extraUpdateData = [];
+            if ($request->validated("password")) {
+                $extraUpdateData["password"] = Hash::make($request->validated("password"));
+            }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+            $user->update([
+                "email" => $request->validated("email"),
+                "first_name" => $request->validated("first_name"),
+                "last_name" => $request->validated("last_name"),
+                "birthdate" => $request->validated("birthdate"),
+                ...$extraUpdateData,
+            ]);
+        } else {
+            $success_msg = "Successfully created user.";
 
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+            $user = User::query()->create([
+                "email" => $request->validated("email"),
+                "password" => Hash::make($request->validated("password")),
+                "first_name" => $request->validated("first_name"),
+                "last_name" => $request->validated("last_name"),
+                "birthdate" => $request->validated("birthdate"),
+            ]);
+        }
+
+        foreach ($request->validated("address_list") as $address_input) {
+            $address = Address::query()->updateOrCreate(
+                [
+                    "user_id" => $user->id,
+                    "address_type_id" => $address_input["address_type_id"],
+                ],
+                [
+                    "address" => $address_input["address"],
+                    "zipcode" => $address_input["zipcode"],
+                    "city" => $address_input["city"],
+                    "state" => $address_input["state"],
+                    "country" => $address_input["country"],
+                ],
+            );
+
+            if (!empty($address_input["proof_document"])) {
+                $address->addDocument($address_input["proof_document"], "proof_document", true);
+            }
+        }
+
+        if ($request->hasFile("profile_image")) {
+            $user->addDocument($request->file("profile_image"), "profile_image", true);
+        }
+
+        return redirect(route("user.detail", ["user_id" => $user->id]))->with([
+            "success_msg" => $success_msg,
+        ]);
     }
 }

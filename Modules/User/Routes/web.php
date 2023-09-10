@@ -18,5 +18,11 @@ Route::prefix("user")
     ->name("user.")
     ->group(function () {
         Route::get("/", [UserController::class, "user_listing"])->name("listing");
+
+        Route::get("/add", [UserController::class, "user_form"])->name("add");
+        Route::get("/edit/{user_id}", [UserController::class, "user_form"])->name("edit");
+        Route::post("/update", [UserController::class, "user_update_or_create"])->name("update");
+        Route::post("/delete", [UserController::class, "user_delete"])->name("delete");
+
         Route::get("/{user_id}", [UserController::class, "user_detail"])->name("detail");
     });

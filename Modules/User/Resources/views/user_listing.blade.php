@@ -1,12 +1,10 @@
 @extends('layouts.master')
 
 @section('title')
-    User | Listing
+    User Listing
 @endsection
 
 @section('content')
-    <h1>User Listing</h1>
-
     <section class="section">
         <form>
             <div class="row">
@@ -17,14 +15,23 @@
                 </div>
             </div>
 
-            <div class="mt-3">
+            <div class="mt-4">
                 <button type="submit" class="btn btn-primary">Search</button>
-                <button type="submit" name="submit" value="reset" class="btn btn-outline-secondary">Reset</button>
+                <button onclick="event.preventDefault(); window.location='{{ route("user.listing") }}'" class="btn btn-outline-secondary">Reset</button>
             </div>
         </form>
     </section>
 
     <section class="section">
+        <div class="d-flex justify-content-end mb-4">
+            <a class="ms-auto" href="{{ route("user.add") }}">
+                <button type="button" class="btn btn-success">
+                    <span class="mdi mdi-plus"></span>
+                    Add User
+                </button>
+            </a>
+        </div>
+
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -40,9 +47,16 @@
                         <th>{{ $user->id }}</th>
                         <td style="min-width: 300px;">
                             <div class="d-flex gap-3">
-                                <img class="profile-image-round-70"
-                                     src="{{ asset('assets/images/profile-placeholder.jpg') }}"
-                                     alt="profile-placeholder"/>
+                                @if($user->getFirstDocument("profile_image"))
+                                    <img class="profile-image-round-70"
+                                         src="{{ $user->getFirstDocument("profile_image")->url }}"
+                                         alt="{{ $user->getFirstDocument("profile_image")->file_name }}"/>
+                                @else
+                                    <img class="profile-image-round-70"
+                                         src="{{ asset('assets/images/profile-placeholder.jpg') }}"
+                                         alt="profile-placeholder"/>
+                                @endif
+
                                 <div>
                                     <h6>{{ $user->full_name }}</h6>
                                     <p>{{ $user->email }}</p>
@@ -72,9 +86,11 @@
                 </tbody>
             </table>
         </div>
-        <div class="mt-4">
-            {{ $user_list->links() }}
-        </div>
+        @if($user_list->hasPages())
+            <div class="mt-4">
+                {{ $user_list->links() }}
+            </div>
+        @endif
     </section>
 
 @endsection

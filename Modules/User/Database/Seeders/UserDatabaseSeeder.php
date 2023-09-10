@@ -26,5 +26,9 @@ class UserDatabaseSeeder extends Seeder
 
         AddressType::query()->create(["name" => "Residential Address", "is_active" => true]);
         AddressType::query()->create(["name" => "Correspondence Address", "is_active" => true]);
+
+        User::factory()
+            ->count(25)
+            ->create();
     }
 }

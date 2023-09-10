@@ -50,3 +50,10 @@ $side-content-width: calc(100% - $side-menu);
     border-radius: 50%;
     object-fit: cover;
 }
+
+.profile-image {
+    height: 200px;
+    width: 150px;
+    object-fit: cover;
+    box-shadow: 2px 2px 15px 0 rgba(0, 0, 0, 0.15);
+}

@@ -34,6 +34,14 @@ return [
             "throw" => false,
         ],
 
+        "document" => [
+            "driver" => "local",
+            "root" => storage_path("documents"),
+            "url" => env("APP_URL") . "/storage/documents",
+            "visibility" => "public",
+            "throw" => false,
+        ],
+
         "public" => [
             "driver" => "local",
             "root" => storage_path("app/public"),
@@ -68,5 +76,6 @@ return [
 
     "links" => [
         public_path("storage") => storage_path("app/public"),
+        public_path("storage/documents") => storage_path("documents"),
     ],
 ];

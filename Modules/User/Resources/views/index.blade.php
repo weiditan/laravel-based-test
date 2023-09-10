@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    User | Detail
+    User Detail
 @endsection
 
 @section('content')

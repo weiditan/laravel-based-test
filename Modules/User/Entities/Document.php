@@ -8,15 +8,19 @@ use Illuminate\Support\Facades\Storage;
 
 class Document extends Model
 {
-    protected $fillable = ["model_id", "model_type", "collection_name", "disk", "file_name"];
+    protected $fillable = ["model_id", "model_type", "collection_name", "disk", "file_path", "file_name"];
+
+    protected static function booted()
+    {
+        static::deleting(function (Document $document) {
+            Storage::disk($document->disk)->delete($document->file_path);
+        });
+    }
 
     public function url(): Attribute
     {
         return Attribute::make(
-            get: fn() => Storage::disk($this->getAttributeValue("disk"))->temporaryUrl(
-                $this->getAttributeValue("file_name"),
-                now()->addMinutes(15),
-            ),
+            get: fn() => Storage::disk($this->getAttributeValue("disk"))->url($this->getAttributeValue("file_path")),
         )->shouldCache();
     }
 }

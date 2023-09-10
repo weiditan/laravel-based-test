@@ -20,7 +20,8 @@
         <div class="flex-grow-1 overflow-auto">
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="{{ route("user.listing") }}" class="nav-link {{ true ? "active" : "link-dark" }}" aria-current="page">
+                    <a href="{{ route("user.listing") }}" class="nav-link {{ true ? "active" : "link-dark" }}"
+                       aria-current="page">
                         <span class="mdi mdi-account me-2"></span>
                         User
                     </a>
@@ -33,6 +34,19 @@
         </header>
         <div class="top-header-box"></div>
         <div class="p-4">
+            <h3 class="mb-4">@yield('title')</h3>
+            @if(Session::has('success_msg'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {!! Session::get('success_msg') !!}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    <div class="alert alert-warning px-4 py-2 mb-2">{{ $error }}</div>
+                @endforeach
+            @endif
             @yield('content')
         </div>
     </div>

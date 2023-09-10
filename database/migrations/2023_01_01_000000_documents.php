@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->unsignedBigInteger("model_id");
             $table->string("collection_name");
             $table->string("disk");
+            $table->string("file_path");
             $table->string("file_name");
             $table->timestamps();
 
