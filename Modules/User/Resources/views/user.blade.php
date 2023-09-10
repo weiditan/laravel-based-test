@@ -14,9 +14,12 @@
                 </button>
             </a>
 
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                <span class="mdi mdi-delete"></span>
-            </button>
+            @if($user->id != auth()->user()->id)
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <span class="mdi mdi-delete"></span>
+                </button>
+            @endif
+
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog">

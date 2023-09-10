@@ -44,11 +44,20 @@ $side-content-width: calc(100% - $side-menu);
     }
 }
 
+.profile-image-round-45 {
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.15);
+}
+
 .profile-image-round-70 {
     height: 70px;
     width: 70px;
     border-radius: 50%;
     object-fit: cover;
+    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.15);
 }
 
 .profile-image {

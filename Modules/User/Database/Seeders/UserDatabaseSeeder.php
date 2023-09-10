@@ -22,7 +22,7 @@ class UserDatabaseSeeder extends Seeder
 
         $user = User::query()->create([
             "email" => "support@email.com",
-            "password" => Hash::make("Abc123456"),
+            "password" => Hash::make("Abcd1234"),
             "first_name" => "My",
             "last_name" => "Support",
             "birthdate" => "2023-01-01",

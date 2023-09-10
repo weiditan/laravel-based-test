@@ -30,18 +30,51 @@
         </div>
     </div>
     <div class="side-content flex-grow-1 overflow-auto">
-        <header class="d-block d-md-none top-header top-header-box d-flex justify-content-between align-items-center px-4">
+        <header class="top-header top-header-box d-flex justify-content-between align-items-center px-4">
+            <div>
+                <div class="d-block d-md-none dropdown">
+                    <a class="btn" href="javascript:void(0);" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        <span class="mdi mdi-menu mdi-24px"></span>
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li>
+                            <a class="dropdown-item" href="{{ route("user.listing") }}">
+                                <span class="mdi mdi-account me-2"></span>
+                                User
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
             <div class="dropdown">
                 <a class="btn" href="javascript:void(0);" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
                    aria-expanded="false">
-                    <span class="mdi mdi-menu mdi-24px"></span>
+                    @if($profile_image = auth()->user()->getFirstDocument("profile_image"))
+                        <img class="profile-image-round-45"
+                             src="{{ $profile_image->url }}"
+                             alt="{{ $profile_image->file_name }}"/>
+                    @else
+                        <img class="profile-image-round-45"
+                             src="{{ asset('assets/images/profile-placeholder.jpg') }}"
+                             alt="profile-placeholder"/>
+                    @endif
                 </a>
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li>
-                        <a class="dropdown-item" href="{{ route("user.listing") }}">
-                            <span class="mdi mdi-account me-2"></span>
-                            User
+                        <a class="dropdown-item" href="{{ route("user.detail", ["user_id" => auth()->user()->id]) }}">
+                            {{ auth()->user()->full_name }}
+                        </a>
+                    </li>
+                    <li>
+                        <hr/>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route("logout") }}">
+                            <span class="mdi mdi-logout me-2"></span>
+                            Logout
                         </a>
                     </li>
                 </ul>
