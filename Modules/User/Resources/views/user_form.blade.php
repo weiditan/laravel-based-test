@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <form method="post" action="{{ route("user.update") }}" enctype="multipart/form-data">
+    <form method="post" action="{{ route("user.$action") }}" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="action" value="{{ $action }}">
         <input type="hidden" name="user_id" value="{{ $user?->id }}">

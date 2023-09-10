@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Modules\User\Entities\Address;
 use Modules\User\Entities\AddressType;
 use Modules\User\Entities\User;
+use Modules\User\Http\Requests\UserDeleteRequest;
 use Modules\User\Http\Requests\UserRequest;
 
 class UserController extends Controller
@@ -122,6 +123,16 @@ class UserController extends Controller
 
         return redirect(route("user.detail", ["user_id" => $user->id]))->with([
             "success_msg" => $success_msg,
+        ]);
+    }
+
+    public function user_delete(UserDeleteRequest $request): RedirectResponse
+    {
+        $user = User::query()->find($request->validated("user_id"));
+        $user->delete();
+
+        return redirect(route("user.listing"))->with([
+            "success_msg" => "Successfully deleted user.",
         ]);
     }
 }

@@ -6,13 +6,39 @@
 
 @section('content')
     <section class="section">
-        <div class="d-flex justify-content-end mb-4">
+        <div class="d-flex justify-content-end gap-2 mb-4">
             <a class="ms-auto" href="{{ route("user.edit",["user_id" => $user->id]) }}">
                 <button type="button" class="btn btn-warning">
                     <span class="mdi mdi-account-edit"></span>
                     Edit User
                 </button>
             </a>
+
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                <span class="mdi mdi-delete"></span>
+            </button>
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete this user?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <form method="post" action="{{ route("user.delete") }}" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="row row-gap-4">

@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\User\Database\factories\UserFactory;
 
 class User extends Model
 {
-    use HasFactory, HasDocument;
+    use SoftDeletes, HasFactory, HasDocument;
 
     protected $fillable = ["email", "password", "first_name", "last_name", "birthdate"];
     protected $hidden = ["password"];
