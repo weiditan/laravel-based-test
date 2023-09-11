@@ -80,7 +80,7 @@
                 </ul>
             </div>
         </header>
-        <div class="d-block d-md-none top-header-box"></div>
+        <div class="top-header-box"></div>
         <div class="p-4">
             <h3 class="mb-4">@yield('title')</h3>
             @if(Session::has('success_msg'))
