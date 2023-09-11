@@ -50,73 +50,75 @@
             </a>
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th colspan="2">Details</th>
-                    <th>Created At</th>
-                </tr>
-                </thead>
-                <tbody>
-                @forelse($user_list as $user)
-                    <tr class="cursor-pointer"
-                        onclick="window.location='{{ route("user.detail", ["user_id" => $user->id]) }}'">
-                        <th>{{ $user->id }}</th>
-                        <td style="min-width: 300px;">
-                            <div class="d-flex gap-3">
-                                @if($user->getFirstDocument("profile_image"))
-                                    <img class="profile-image-round-70"
-                                         src="{{ $user->getFirstDocument("profile_image")->url }}"
-                                         alt="{{ $user->getFirstDocument("profile_image")->file_name }}"/>
-                                @else
-                                    <img class="profile-image-round-70"
-                                         src="{{ asset('assets/images/profile-placeholder.jpg') }}"
-                                         alt="profile-placeholder"/>
+        <table id="table-user" class="table table-hover w-100">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Profile</th>
+                <th>Details</th>
+                <th>Status</th>
+                <th>Address</th>
+                <th>Created At</th>
+            </tr>
+            </thead>
+            <tbody>
+            @forelse($user_list as $user)
+                <tr class="cursor-pointer"
+                    onclick="window.location='{{ route("user.detail", ["user_id" => $user->id]) }}'">
+                    <th>{{ $user->id }}</th>
+                    <th>
+                        @if($user->getFirstDocument("profile_image"))
+                            <img class="profile-image-round-70"
+                                 src="{{ $user->getFirstDocument("profile_image")->url }}"
+                                 alt="{{ $user->getFirstDocument("profile_image")->file_name }}"/>
+                        @else
+                            <img class="profile-image-round-70"
+                                 src="{{ asset('assets/images/profile-placeholder.jpg') }}"
+                                 alt="profile-placeholder"/>
+                        @endif
+                    </th>
+                    <td style="min-width: 300px;">
+                        <div class="d-flex gap-3">
+                            <div>
+                                <h6>{{ $user->full_name }}</h6>
+                                <p>{{ $user->email }}</p>
+                                <p>{{ date_format(date_create($user->birthdate),"d M Y") }}</p>
+
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <h5 class="mt-3 {{ $user_status_color_class_list[$user->status] }}">{{ strtoupper($user->status) }}</h5>
+                    </td>
+                    <td style="min-width: 300px;">
+                        <div class="d-flex flex-column gap-4">
+                            @forelse($user->address_list->sortBy('address_type_id') as $address)
+                                @if($address->address_type->is_active)
+                                    <div>
+                                        <h6>{{ $address->address_type->name }}</h6>
+                                        <p>{{ "$address->address," }}</p>
+                                        <p>{{ "$address->zipcode $address->city," }}</p>
+                                        <p>{{ "$address->state, $address->country." }}</p>
+                                    </div>
                                 @endif
-
-                                <div>
-                                    <h6>{{ $user->full_name }}</h6>
-                                    <p>{{ $user->email }}</p>
-                                    <p>{{ date_format(date_create($user->birthdate),"d M Y") }}</p>
-                                    <h5 class="mt-3 {{ $user_status_color_class_list[$user->status] }}">{{ strtoupper($user->status) }}</h5>
-                                </div>
-                            </div>
-                        </td>
-                        <td style="min-width: 300px;">
-                            <div class="d-flex flex-column gap-4">
-                                @forelse($user->address_list->sortBy('address_type_id') as $address)
-                                    @if($address->address_type->is_active)
-                                        <div>
-                                            <h6>{{ $address->address_type->name }}</h6>
-                                            <p>{{ "$address->address," }}</p>
-                                            <p>{{ "$address->zipcode $address->city," }}</p>
-                                            <p>{{ "$address->state, $address->country." }}</p>
-                                        </div>
-                                    @endif
-                                @empty
-                                @endforelse
-                            </div>
-                        </td>
-                        <td style="min-width: 230px;">{{ date_format(date_create($user->created_at),"d M Y h:i A") }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="3">No record found.</td>
-                    </tr>
-                @endforelse
-                </tbody>
-            </table>
-        </div>
-        @if($user_list->hasPages())
-            <div class="mt-4">
-                {{ $user_list->links() }}
-            </div>
-        @endif
+                            @empty
+                            @endforelse
+                        </div>
+                    </td>
+                    <td style="min-width: 230px;">{{ date_format(date_create($user->created_at),"d M Y h:i A") }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="3">No record found.</td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
     </section>
+@endsection
 
-    <script>
+@section('script')
+    <script type="module">
         function submitForm(url) {
             event.preventDefault();
 
@@ -129,5 +131,10 @@
             event.preventDefault();
             window.location = url;
         }
+
+        $('#table-user').dataTable({
+            scrollX: true,
+            searching: false
+        });
     </script>
 @endsection

@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function user_listing(Request $request): View
     {
-        $user_list = $this->user_repository->user_builder($request->all())->paginate(10);
+        $user_list = $this->user_repository->user_builder($request->all())->get();
 
         return view("user::user_listing", [
             "user_list" => $user_list,
