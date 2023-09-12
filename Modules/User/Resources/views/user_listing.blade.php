@@ -119,6 +119,13 @@
 
 @section('script')
     <script type="module">
+        $('#table-user').dataTable({
+            scrollX: true,
+            searching: false
+        });
+    </script>
+
+    <script>
         function submitForm(url) {
             event.preventDefault();
 
@@ -131,10 +138,5 @@
             event.preventDefault();
             window.location = url;
         }
-
-        $('#table-user').dataTable({
-            scrollX: true,
-            searching: false
-        });
     </script>
 @endsection
