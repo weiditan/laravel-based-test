@@ -6,13 +6,12 @@
 
 @section('content')
     <div class="d-flex align-items-center justify-content-center" style="height: 100vh;">
-        <div class="bg-white p-5 rounded-4 shadow" style="max-width: 500px; width: 95%">
+        <div class="bg-white p-5 px-4 px-md-5 rounded-4 shadow" style="max-width: 500px; width: 95%">
             <form id="form" method="POST" action="{{ route('login') }}">
                 @csrf
 
                 <div class="d-flex align-items-center justify-content-center mb-3">
-                    <span class="mdi mdi-laravel mdi-48px me-2"></span>
-                    <h1>Laravel</h1>
+                    <img class="w-100" src="{{ asset('assets/seiko-logo.png') }}" alt="seiko">
                 </div>
 
                 @if ($errors->any())
